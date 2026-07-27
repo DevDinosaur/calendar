@@ -6,263 +6,86 @@
 <title>Structure · Bible Class Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1B2A26;
-    --ink-soft:#4A5A55;
-    --paper:#F4F6F3;
-    --card:#FFFFFF;
-    --deep:#1F4A3F;
-    --mid:#55897A;
-    --light:#A7C6B8;
-    --brass:#9A7B2F;
-    --brass-soft:#EFE4C8;
+    --ink:#1B2A26; --ink-soft:#4A5A55;
+    --paper:#F4F6F3; --card:#FFFFFF;
+    --deep:#1F4A3F; --mid:#55897A; --light:#A7C6B8;
+    --brass:#9A7B2F; --brass-soft:#EFE4C8;
     --rule:#D6DDD7;
     --display:"Fraunces","Iowan Old Style",Palatino,Georgia,serif;
     --body:"Public Sans","Helvetica Neue",Arial,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   }
-
   *{box-sizing:border-box;}
   html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--body);
-    font-size:15px;
-    line-height:1.55;
-    padding:32px 20px 64px;
-  }
-  .sheet{max-width:920px;margin:0 auto;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding:0 20px 70px;}
+  .sheet{max-width:1000px;margin:0 auto;}
 
-  /* ---------- masthead ---------- */
-  .masthead{
-    border-bottom:2px solid var(--ink);
-    padding-bottom:14px;
-    margin-bottom:26px;
-  }
-  
-  h1{
-    font-family:var(--display);
-    font-weight:600;
-    font-size:clamp(30px,5vw,44px);
-    line-height:1.02;
-    letter-spacing:-.02em;
-    margin:0 0 8px;
-  }
+  /* site nav */
+  .sitenav{display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:18px 0 14px;border-bottom:1px solid var(--rule);margin-bottom:30px;}
+  .sitenav .brandlink{font-family:var(--display);font-size:17px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
+  .sitenav .brandlink:hover{color:var(--brass);}
+  .sitenav a.nl{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
+  .sitenav a.nl:hover{color:var(--ink);}
+  .sitenav a.nl.on{color:var(--ink);border-bottom-color:var(--brass);}
 
-  /* ---------- section headings ---------- */
-  h2{
-    font-family:var(--display);
-    font-weight:600;
-    font-size:21px;
-    letter-spacing:-.01em;
-    margin:0 0 4px;
-  }
-  .sub{
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.13em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    margin:0 0 14px;
-  }
-  section{margin-bottom:34px;}
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:30px;}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(32px,5.2vw,46px);line-height:1.02;letter-spacing:-.02em;margin:0;}
 
-  /* ---------- the wave ---------- */
-  .wave{
-    background:var(--card);
-    border:1px solid var(--rule);
-    padding:22px 24px 18px;
-  }
-  .months{
-    position:relative;
-    height:16px;
-    margin-bottom:6px;
-  }
-  .months span{
-    position:absolute;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    transform:translateX(-1px);
-  }
-  .rowlabel{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    margin:0 0 5px;
-  }
+  h2{font-family:var(--display);font-weight:600;font-size:23px;letter-spacing:-.01em;margin:0 0 4px;}
+  .sub{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:0 0 16px;}
+  section{margin-bottom:38px;}
+
+  /* wave */
+  .wave{background:var(--card);border:1px solid var(--rule);padding:22px 24px 18px;}
+  .months{position:relative;height:18px;margin-bottom:7px;}
+  .months span{position:absolute;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);transform:translateX(-1px);}
+  .rowlabel{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:0 0 6px;}
   .bar{display:flex;width:100%;gap:2px;}
-  .bar + .rowlabel{margin-top:16px;}
-  .seg{
-    position:relative;
-    padding:9px 8px 8px;
-    color:#fff;
-    overflow:hidden;
-    min-width:0;
-  }
-  .seg .n{
-    display:block;
-    font-family:var(--mono);
-    font-size:15px;
-    font-weight:700;
-    line-height:1;
-  }
-  .seg .lab{
-    display:block;
-    font-size:10.5px;
-    letter-spacing:.04em;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    opacity:.92;
-    margin-top:3px;
-  }
-  .seg .split{
-    position:absolute;
-    top:0;bottom:0;
-    width:0;
-    border-left:1.5px dashed rgba(255,255,255,.5);
-    pointer-events:none;
-  }
-  .seg.divisible .lab{opacity:1;}
-  .seg.divisible .lab em{
-    font-style:normal;
-    border-bottom:1.5px dashed rgba(255,255,255,.6);
-    padding-bottom:1px;
-  }
-  .d13{background:var(--deep);}
-  .d9{background:var(--mid);}
-  .d4{background:var(--light);color:var(--ink);}
+  .bar + .rowlabel{margin-top:18px;}
+  .seg{position:relative;padding:10px 9px 9px;color:#fff;overflow:hidden;min-width:0;}
+  .seg .n{display:block;font-size:17px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+  .seg .lab{display:block;font-size:12.5px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.94;margin-top:4px;font-weight:500;}
+  .d13{background:var(--deep);} .d9{background:var(--mid);} .d4{background:var(--light);color:var(--ink);}
   .dsummer{background:var(--brass);}
-  .legend{
-    display:flex;
-    flex-wrap:wrap;
-    gap:16px;
-    margin-top:16px;
-    padding-top:12px;
-    border-top:1px solid var(--rule);
-    font-size:12px;
-    color:var(--ink-soft);
-  }
-  .legend i{
-    display:inline-block;
-    width:10px;height:10px;
-    margin-right:6px;
-    vertical-align:baseline;
-  }
+  .split{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed rgba(255,255,255,.5);pointer-events:none;}
+  .seg .lab em{font-style:normal;border-bottom:1.5px dashed rgba(255,255,255,.6);padding-bottom:1px;}
+  .legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);font-size:14px;color:var(--ink-soft);}
+  .legend i{display:inline-block;width:11px;height:11px;margin-right:7px;vertical-align:baseline;}
 
-  /* ---------- turnover dates ---------- */
-  .turnover{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:2px;
-    background:var(--rule);
-    border:1px solid var(--rule);
-  }
-  .turnover div{
-    background:var(--card);
-    padding:12px 10px;
-    text-align:center;
-  }
-  .turnover .t{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    display:block;
-    margin-bottom:3px;
-  }
-  .turnover .dte{
-    font-family:var(--display);
-    font-size:20px;
-    font-weight:600;
-    letter-spacing:-.01em;
-  }
+  /* turnover */
+  .turnover{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule);}
+  .turnover div{background:var(--card);padding:14px 10px;text-align:center;}
+  .turnover .t{font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:4px;}
+  .turnover .dte{font-family:var(--display);font-size:23px;font-weight:600;letter-spacing:-.01em;}
 
-  /* ---------- tables ---------- */
-  table{
-    width:100%;
-    border-collapse:collapse;
-    background:var(--card);
-    font-size:14px;
-  }
+  /* table */
+  table{width:100%;border-collapse:collapse;background:var(--card);font-size:15px;}
   th{
-    text-align:left;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    font-weight:500;
-    padding:9px 12px;
-    border-bottom:1.5px solid var(--ink);
-    white-space:nowrap;
+    text-align:left;font-size:12px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-soft);font-weight:600;padding:11px 12px;border-bottom:1.5px solid var(--ink);white-space:nowrap;
   }
-  td{
-    padding:10px 12px;
-    border-bottom:1px solid var(--rule);
-    vertical-align:top;
-  }
+  td{padding:12px;border-bottom:1px solid var(--rule);vertical-align:top;}
   tr:last-child td{border-bottom:none;}
-  .term{
-    font-family:var(--display);
-    font-weight:600;
-    white-space:nowrap;
-  }
-  .wk{font-family:var(--mono);font-weight:700;}
-  .dates{font-family:var(--mono);font-size:12.5px;white-space:nowrap;}
-  .merged{color:var(--brass);font-weight:500;}
-  .note{color:var(--ink-soft);font-size:12.5px;}
+  .term{font-family:var(--display);font-weight:600;font-size:17px;white-space:nowrap;}
+  .wk{font-weight:700;font-variant-numeric:tabular-nums;}
+  .dates{font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .merged{color:var(--brass);font-weight:600;}
+  .note{color:var(--ink-soft);font-size:14px;}
+  .note b{color:var(--ink);font-weight:600;}
 
-  /* ---------- three-up cards ---------- */
-
-  
-
-  
-
-  /* ---------- summer series ---------- */
-
-  
-
-  /* ---------- watch list ---------- */
-
-  
-
-  /* ---------- open items ---------- */
-
-  
-
-  
-
-  @media (max-width:720px){
+  @media (max-width:760px){
     .turnover{grid-template-columns:repeat(3,1fr);}
     .seg .lab{display:none;}
   }
 
-
-  /* site nav */
-  .sitenav{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:16px 0 13px;border-bottom:1px solid var(--rule);margin-bottom:24px;}
-  .sitenav .brandlink{font-family:var(--display);font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
-  .sitenav .brandlink:hover{color:var(--brass);}
-  .sitenav a.nl{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
-  .sitenav a.nl:hover{color:var(--ink);}
-  .sitenav a.nl.on{color:var(--ink);border-bottom-color:var(--brass);}
-  @media print{.sitenav{display:none !important;}}
-
   @media print{
-    @page{size:letter portrait;margin:0.45in;}
+    @page{size:letter portrait;margin:.45in;}
     body{background:#fff;padding:0;font-size:10.5pt;}
     .sheet{max-width:none;}
-    section{margin-bottom:20px;break-inside:avoid;}
+    .sitenav{display:none !important;}
+    section{margin-bottom:22px;break-inside:avoid;}
     .wave,.turnover,table{break-inside:avoid;}
   }
 </style>
@@ -276,7 +99,6 @@
     <a class="nl on" href="cal-structure.html">Structure</a>
     <a class="nl" href="cal-plan.html">Planner</a>
   </nav>
-
 
   <header class="masthead">
     <h1>2027 Bible Class Calendar</h1>
@@ -307,7 +129,7 @@
         <div class="seg d9" style="width:17.3%"><span class="n">9</span><span class="lab">Term 2</span></div>
         <div class="seg d4" style="width:7.7%"><span class="n">4</span><span class="lab">T3</span></div>
         <div class="seg d9" style="width:17.3%"><span class="n">9</span><span class="lab">Term 4</span></div>
-        <div class="seg d13 divisible" style="width:25%"><span class="split" style="left:30.8%"></span><span class="split" style="left:61.5%"></span><span class="n">13</span><span class="lab">Term 5 · <em>divisible</em></span></div>
+        <div class="seg d13" style="width:25%"><span class="split" style="left:30.8%"></span><span class="split" style="left:61.5%"></span><span class="n">13</span><span class="lab">Term 5 · <em>divisible</em></span></div>
         <div class="seg d4" style="width:7.7%"><span class="n">4</span><span class="lab">T6</span></div>
       </div>
 
@@ -316,15 +138,15 @@
         <div class="seg d13" style="width:25%"><span class="n">13</span><span class="lab">Term 1</span></div>
         <div class="seg d9" style="width:17.3%"><span class="n">9</span><span class="lab">Term 2</span></div>
         <div class="seg dsummer" style="width:25%"><span class="n">13</span><span class="lab">Summer series (T3 + T4)</span></div>
-        <div class="seg d13 divisible" style="width:25%"><span class="split" style="left:30.8%"></span><span class="split" style="left:61.5%"></span><span class="n">13</span><span class="lab">Term 5 · <em>divisible</em></span></div>
+        <div class="seg d13" style="width:25%"><span class="split" style="left:30.8%"></span><span class="split" style="left:61.5%"></span><span class="n">13</span><span class="lab">Term 5 · <em>divisible</em></span></div>
         <div class="seg d4" style="width:7.7%"><span class="n">4</span><span class="lab">T6</span></div>
       </div>
 
       <div class="legend">
-        <span><i class="d13" style="background:var(--deep)"></i>13 weeks · book study or major survey</span>
-        <span><i class="d9" style="background:var(--mid)"></i>9 weeks · focused study</span>
-        <span><i class="d4" style="background:var(--light)"></i>4 weeks · short, self-contained</span>
-        <span><i class="dsummer" style="background:var(--brass)"></i>Summer series, Wednesdays only</span>
+        <span><i style="background:var(--deep)"></i>13 weeks · book study or major survey</span>
+        <span><i style="background:var(--mid)"></i>9 weeks · focused study</span>
+        <span><i style="background:var(--light)"></i>4 weeks · short, self-contained</span>
+        <span><i style="background:var(--brass)"></i>Summer series, Wednesdays only</span>
         <span><i style="background:var(--deep);border-left:1.5px dashed #fff;border-right:1.5px dashed #fff;"></i>Dashed: one term on the calendar, divisible into modules if the material calls for it</span>
       </div>
     </div>
@@ -348,11 +170,7 @@
     <table>
       <thead>
         <tr>
-          <th>Term</th>
-          <th>Weeks</th>
-          <th>Sundays</th>
-          <th>Wednesdays</th>
-          <th>Notes</th>
+          <th>Term</th><th>Weeks</th><th>Sundays</th><th>Wednesdays</th><th>Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -394,7 +212,7 @@
         </tr>
       </tbody>
     </table>
-    <p class="note" style="margin:10px 2px 0;">A week runs Sunday through the Wednesday that follows it, so a term that opens Sunday Jan 3 closes Wednesday Mar 31.</p>
+    <p class="note" style="margin:12px 2px 0;">A week runs Sunday through the Wednesday that follows it, so a term that opens Sunday Jan 3 closes Wednesday Mar 31.</p>
   </section>
 
 </div>

@@ -6,7 +6,7 @@
 <title>Planner · Bible Class Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1B2A26; --ink-soft:#4A5A55;
@@ -16,209 +16,184 @@
     --rule:#D6DDD7; --rule-soft:#E8EDE9;
     --display:"Fraunces","Iowan Old Style",Palatino,Georgia,serif;
     --body:"Public Sans","Helvetica Neue",Arial,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;}
-  .sheet{max-width:1180px;margin:0 auto;padding:0 20px 80px;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px;}
+  .sheet{max-width:1280px;margin:0 auto;padding:0 20px 80px;}
+
+  /* site nav */
+  .sitenav{display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:18px 0 14px;border-bottom:1px solid var(--rule);}
+  .sitenav .brandlink{font-family:var(--display);font-size:17px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
+  .sitenav .brandlink:hover{color:var(--brass);}
+  .sitenav a.nl{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
+  .sitenav a.nl:hover{color:var(--ink);}
+  .sitenav a.nl.on{color:var(--ink);border-bottom-color:var(--brass);}
 
   /* toolbar */
   .toolbar{
-    position:sticky;top:0;z-index:20;
+    position:sticky;top:0;z-index:30;
+    max-width:1280px;margin:0 auto 26px;padding:12px 20px;
     background:var(--ink);color:#fff;
-    margin:0 -20px 26px;padding:12px 20px;
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   }
-  .toolbar .brand{font-family:var(--display);font-size:19px;font-weight:600;margin-right:auto;}
-  .toolbar label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.72;margin-right:6px;}
+  .toolbar .brand{font-family:var(--display);font-size:20px;font-weight:600;margin-right:auto;}
+  .toolbar .tlab{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;opacity:.7;margin-right:7px;}
   input[type=number]{
-    font-family:var(--mono);font-size:14px;font-weight:700;width:82px;
-    background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.28);
-    padding:6px 8px;border-radius:2px;
+    font-family:var(--body);font-size:15px;font-weight:700;width:88px;
+    background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3);
+    padding:6px 8px;border-radius:2px;font-variant-numeric:tabular-nums;
   }
   button{
-    font-family:var(--body);font-size:13px;font-weight:500;
+    font-family:var(--body);font-size:14px;font-weight:500;
     background:transparent;color:#fff;border:1px solid rgba(255,255,255,.34);
-    padding:6px 12px;border-radius:2px;cursor:pointer;
+    padding:7px 13px;border-radius:2px;cursor:pointer;
   }
-  button:hover{background:rgba(255,255,255,.12);}
+  button:hover{background:rgba(255,255,255,.13);}
+  button.primary{background:var(--brass);border-color:var(--brass);font-weight:600;}
+  button.primary:hover{background:#B08F3B;border-color:#B08F3B;}
   button.warn:hover{background:#7B2B22;border-color:#7B2B22;}
-  #status{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;min-width:96px;}
+  #status{font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.65;min-width:124px;}
   .viewtabs{display:inline-flex;}
   .viewtabs button{border-radius:0;margin:0;}
   .viewtabs button:first-child{border-right:none;}
   .viewtabs button.on{background:#fff;color:var(--ink);border-color:#fff;font-weight:600;}
   .viewtabs button.on:hover{background:#fff;}
 
-  /* by-class year grid */
-  .yearwrap{background:var(--card);border:1px solid var(--rule);overflow-x:auto;}
-  table.byclass{border-collapse:collapse;width:100%;min-width:1040px;}
-  table.byclass th.rowh,table.byclass td.rowh{
-    position:sticky;left:0;z-index:3;background:var(--card);
-    border-right:1px solid var(--rule);
-    width:172px;min-width:172px;padding:8px 12px;text-align:left;vertical-align:top;
-  }
-  table.byclass thead th{
-    padding:11px 10px 9px;text-align:left;vertical-align:bottom;
-    border-bottom:1.5px solid var(--ink);
-  }
-  table.byclass thead th.rowh{z-index:4;}
-  .thTerm{font-family:var(--display);font-size:15px;font-weight:600;display:block;line-height:1.1;}
-  .thWk{
-    font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.06em;
-    color:#fff;background:var(--mid);padding:2px 5px;display:inline-block;margin:3px 0 4px;
-  }
-  .thWk.w13{background:var(--deep);} .thWk.w4{background:var(--light);color:var(--ink);}
-  .thDates{font-family:var(--mono);font-size:10px;color:var(--ink-soft);display:block;line-height:1.35;}
-  table.byclass td{
-    padding:5px 6px;border-bottom:1px solid var(--rule-soft);
-    border-right:1px solid var(--rule-soft);vertical-align:top;
-  }
-  table.byclass tbody tr:last-child td{border-bottom:none;}
-  .yrname{font-size:13.5px;font-weight:600;line-height:1.25;}
-  .cellfld{
-    width:100%;font-family:var(--body);font-size:13px;padding:6px 7px;
-    border:1px solid transparent;background:#F7F9F7;color:var(--ink);border-radius:2px;
-  }
-  .cellfld:focus{outline:none;border-color:var(--deep);background:#fff;}
-  .cellfld::placeholder{color:#B3BEB9;}
-  .cellfld.who{margin-top:3px;font-size:12px;background:transparent;border-color:var(--rule-soft);}
-  .cellfld.who:focus{background:#fff;}
-  td.summerspan{background:#FBF6E9;}
-  .spanlab{
-    font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-    color:#6E5514;display:block;margin-bottom:3px;
-  }
-  tr.grpband td{
-    font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink-soft);background:#F0F3F0;padding:6px 12px;border-right:none;
-  }
-  tr.grpband td.rowh{background:#F0F3F0;}
-
-  h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 3px;}
-  .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 12px;}
+  h2{font-family:var(--display);font-weight:600;font-size:22px;margin:0 0 4px;}
+  .sub{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:0 0 14px;}
   section{margin-bottom:30px;}
 
-  /* class manager */
-  details.panel{background:var(--card);border:1px solid var(--rule);}
+  .banner{
+    background:var(--brass-soft);border:1px solid #DDC894;
+    padding:13px 16px;margin-bottom:20px;font-size:15px;
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+  }
+  .banner button{color:var(--ink);border-color:#B79E5E;padding:6px 12px;font-size:13.5px;}
+  .banner button:hover{background:#E3D3AA;}
+
+  details.panel{background:var(--card);border:1px solid var(--rule);margin-bottom:12px;}
   details.panel > summary{
-    padding:13px 16px;cursor:pointer;list-style:none;
-    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    padding:14px 16px;cursor:pointer;list-style:none;
+    font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
   }
   details.panel > summary::-webkit-details-marker{display:none;}
   details.panel > summary::before{content:"▸ ";color:var(--brass);}
   details.panel[open] > summary::before{content:"▾ ";}
-  .panel-body{padding:4px 16px 18px;border-top:1px solid var(--rule-soft);}
-  .clsrow{display:grid;grid-template-columns:1fr 132px 118px 34px;gap:8px;align-items:center;margin-top:8px;}
-  .clsrow input[type=text],.clsrow select{
-    font-family:var(--body);font-size:14px;padding:7px 9px;
+  .panel-body{padding:6px 16px 20px;border-top:1px solid var(--rule-soft);}
+  .hint{font-size:14px;color:var(--ink-soft);margin:4px 0 12px;max-width:76ch;}
+  .hint code{background:#EEF2EF;padding:1px 5px;font-size:13.5px;}
+
+  .clsrow{display:grid;grid-template-columns:1fr 150px 130px 38px;gap:9px;align-items:center;margin-top:9px;}
+  .clsrow input[type=text],.clsrow select,.cfgrow input{
+    font-family:var(--body);font-size:15px;padding:8px 10px;
     border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:2px;width:100%;
   }
-  .clsrow button{color:var(--ink-soft);border-color:var(--rule);padding:6px 0;}
+  .clsrow button{color:var(--ink-soft);border-color:var(--rule);padding:7px 0;}
   .clsrow button:hover{background:#F3E3E0;border-color:#9C4A3C;color:#9C4A3C;}
-  .addbtn{margin-top:12px;color:var(--ink);border-color:var(--ink);}
+  .addbtn{margin-top:14px;color:var(--ink);border-color:var(--ink);}
   .addbtn:hover{background:var(--ink);color:#fff;}
-  .hint{font-size:12.5px;color:var(--ink-soft);margin:2px 0 10px;}
 
-  /* term card */
-  .term{background:var(--card);border:1px solid var(--rule);margin-bottom:16px;}
-  .thead{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--rule);}
-  .tnum{font-family:var(--display);font-size:23px;font-weight:600;line-height:1;}
-  .twk{
-    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;
-    color:#fff;background:var(--mid);padding:4px 8px;
+  .cfgrow{display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:center;margin-top:9px;max-width:640px;}
+  .cfgrow label{font-size:13.5px;font-weight:600;color:var(--ink-soft);}
+  .cfgbtns{margin-top:16px;display:flex;gap:9px;flex-wrap:wrap;}
+  .cfgbtns button{color:var(--ink);border-color:var(--ink);}
+  .cfgbtns button:hover{background:var(--ink);color:#fff;}
+  .tokstate{font-size:13.5px;margin-top:14px;padding:10px 13px;background:#EEF2EF;max-width:76ch;}
+  .tokstate.ok{background:#E4EFE8;}
+
+  /* by-class grid */
+  .yearwrap{background:var(--card);border:1px solid var(--rule);overflow-x:auto;}
+  table.byclass{border-collapse:collapse;width:100%;min-width:1190px;}
+  table.byclass th.rowh,table.byclass td.rowh{
+    position:sticky;left:0;z-index:3;background:var(--card);
+    border-right:1px solid var(--rule);
+    width:186px;min-width:186px;padding:9px 13px;text-align:left;vertical-align:top;
   }
+  table.byclass thead th{padding:12px 10px 10px;text-align:left;vertical-align:bottom;border-bottom:1.5px solid var(--ink);}
+  table.byclass thead th.rowh{z-index:4;}
+  .thTerm{font-family:var(--display);font-size:17px;font-weight:600;display:block;line-height:1.1;}
+  .thWk{font-size:12px;font-weight:700;letter-spacing:.05em;color:#fff;background:var(--mid);padding:2px 6px;display:inline-block;margin:4px 0 5px;}
+  .thWk.w13{background:var(--deep);} .thWk.w4{background:var(--light);color:var(--ink);}
+  .thDates{font-size:13px;color:var(--ink-soft);display:block;line-height:1.35;font-variant-numeric:tabular-nums;}
+  table.byclass td{padding:6px 7px;border-bottom:1px solid var(--rule-soft);border-right:1px solid var(--rule-soft);vertical-align:top;}
+  table.byclass tbody tr:last-child td{border-bottom:none;}
+  .yrname{font-size:15px;font-weight:600;line-height:1.25;}
+  .cday{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);display:block;margin-top:2px;}
+  .cellfld{
+    width:100%;font-family:var(--body);font-size:15px;padding:7px 8px;
+    border:1px solid transparent;background:#F7F9F7;color:var(--ink);border-radius:2px;
+  }
+  .cellfld:focus{outline:none;border-color:var(--deep);background:#fff;}
+  .cellfld::placeholder{color:#AFBAB5;}
+  .cellfld.who{margin-top:4px;font-size:14px;background:transparent;border-color:var(--rule-soft);}
+  .cellfld.who:focus{background:#fff;}
+  td.summerspan{background:#FBF6E9;}
+  .spanlab{font-size:12px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:#6E5514;display:block;margin-bottom:4px;}
+  tr.grpband td{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:#F0F3F0;padding:7px 13px;border-right:none;}
+  tr.grpband td.rowh{background:#F0F3F0;}
+
+  /* term cards */
+  .term{background:var(--card);border:1px solid var(--rule);margin-bottom:16px;}
+  .thead{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid var(--rule);}
+  .tnum{font-family:var(--display);font-size:25px;font-weight:600;line-height:1;}
+  .twk{font-size:12.5px;font-weight:700;letter-spacing:.05em;color:#fff;background:var(--mid);padding:4px 9px;}
   .twk.w13{background:var(--deep);} .twk.w4{background:var(--light);color:var(--ink);}
-  .tdates{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);}
+  .tdates{font-size:14px;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
   .tdates b{color:var(--ink);font-weight:700;}
-  .tflag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--brass-soft);color:#6E5514;padding:4px 8px;}
-  .tbody{padding:6px 18px 18px;}
+  .tflag{font-size:12px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;background:var(--brass-soft);color:#6E5514;padding:4px 9px;}
+  .tbody{padding:8px 18px 20px;}
 
   table.assign{width:100%;border-collapse:collapse;}
   table.assign th{
-    text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--ink-soft);font-weight:500;padding:9px 8px 6px;border-bottom:1px solid var(--rule);
+    text-align:left;font-size:12px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-soft);font-weight:600;padding:10px 8px 7px;border-bottom:1px solid var(--rule);
   }
-  table.assign td{padding:4px 8px;border-bottom:1px solid var(--rule-soft);vertical-align:middle;}
+  table.assign td{padding:5px 8px;border-bottom:1px solid var(--rule-soft);vertical-align:middle;}
   table.assign tr:last-child td{border-bottom:none;}
-  .cname{font-size:13.5px;font-weight:600;white-space:nowrap;}
-  .cday{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:block;font-weight:400;}
-  .fld{
-    width:100%;font-family:var(--body);font-size:14px;padding:7px 9px;
-    border:1px solid transparent;background:#F7F9F7;color:var(--ink);border-radius:2px;
-  }
+  .cname{font-size:15px;font-weight:600;white-space:nowrap;}
+  .fld{width:100%;font-family:var(--body);font-size:15px;padding:8px 10px;border:1px solid transparent;background:#F7F9F7;color:var(--ink);border-radius:2px;}
   .fld:hover{border-color:var(--rule);}
   .fld:focus{outline:none;border-color:var(--deep);background:#fff;}
-  .fld::placeholder{color:#A9B5B0;}
-  .grp{background:#F0F3F0;}
-  .grp td{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding:7px 8px;}
+  .fld::placeholder{color:#AFBAB5;}
+  tr.grp td{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);background:#F0F3F0;padding:8px;}
 
-  /* weeks */
-  details.weeks{margin-top:14px;border-top:1px solid var(--rule);}
-  details.weeks > summary{
-    padding:11px 0 0;cursor:pointer;list-style:none;
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);
-  }
+  details.weeks{margin-top:16px;border-top:1px solid var(--rule);}
+  details.weeks > summary{padding:12px 0 0;cursor:pointer;list-style:none;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--brass);}
   details.weeks > summary::-webkit-details-marker{display:none;}
   details.weeks > summary::before{content:"▸ ";}
   details.weeks[open] > summary::before{content:"▾ ";}
   .scroller{overflow-x:auto;margin-top:12px;}
-  table.wk{border-collapse:collapse;font-size:13px;min-width:100%;}
-  table.wk th{
-    font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-soft);font-weight:500;text-align:left;padding:7px 8px;
-    border-bottom:1px solid var(--rule);white-space:nowrap;
-  }
-  table.wk td{padding:3px 4px;border-bottom:1px solid var(--rule-soft);}
-  table.wk td:first-child,table.wk th:first-child{
-    position:sticky;left:0;background:var(--card);z-index:2;padding-left:0;padding-right:12px;
-  }
-  .wdate{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap;}
-  .wnum{font-family:var(--mono);font-size:10px;color:var(--ink-soft);font-weight:400;}
-  .wfld{
-    width:190px;font-family:var(--body);font-size:13px;padding:6px 8px;
-    border:1px solid transparent;background:#F7F9F7;border-radius:2px;color:var(--ink);
-  }
+  table.wk{border-collapse:collapse;font-size:15px;min-width:100%;}
+  table.wk th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;text-align:left;padding:8px;border-bottom:1px solid var(--rule);white-space:nowrap;}
+  table.wk td{padding:4px 5px;border-bottom:1px solid var(--rule-soft);}
+  table.wk td:first-child,table.wk th:first-child{position:sticky;left:0;background:var(--card);z-index:2;padding-left:0;padding-right:14px;}
+  .wdate{font-size:14px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .wnum{font-size:12px;color:var(--ink-soft);font-weight:500;}
+  .wfld{width:210px;font-family:var(--body);font-size:14px;padding:7px 9px;border:1px solid transparent;background:#F7F9F7;border-radius:2px;color:var(--ink);}
   .wfld:focus{outline:none;border-color:var(--deep);background:#fff;}
-  .daylabel{
-    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink-soft);margin:16px 0 2px;
-  }
-  .seriesbox{background:var(--brass-soft);padding:10px 14px;margin-top:12px;font-size:13px;}
-  .seriesbox b{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:3px;color:#6E5514;}
-
-  .tnotes{width:100%;font-family:var(--body);font-size:13.5px;padding:8px 10px;border:1px solid var(--rule-soft);background:#F7F9F7;border-radius:2px;resize:vertical;min-height:44px;margin-top:14px;color:var(--ink);}
+  .daylabel{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:18px 0 3px;}
+  .seriesbox{background:var(--brass-soft);padding:12px 15px;margin-top:13px;font-size:14.5px;}
+  .seriesbox b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px;color:#6E5514;}
+  .tnotes{width:100%;font-family:var(--body);font-size:15px;padding:9px 11px;border:1px solid var(--rule-soft);background:#F7F9F7;border-radius:2px;resize:vertical;min-height:48px;margin-top:16px;color:var(--ink);}
   .tnotes:focus{outline:none;border-color:var(--deep);background:#fff;}
 
-
-  .navwrap{max-width:1180px;margin:0 auto;padding:0 20px;}
-  /* site nav */
-  .sitenav{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:16px 0 13px;border-bottom:1px solid var(--rule);margin-bottom:0;}
-  .sitenav .brandlink{font-family:var(--display);font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
-  .sitenav .brandlink:hover{color:var(--brass);}
-  .sitenav a.nl{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
-  .sitenav a.nl:hover{color:var(--ink);}
-  .sitenav a.nl.on{color:var(--ink);border-bottom-color:var(--brass);}
-  @media print{.sitenav,.navwrap{display:none !important;}}
-
   @media print{
-    @page{size:letter portrait;margin:.45in;}
-    body{background:#fff;font-size:9.5pt;}
-    .toolbar,.panel,.addbtn,details.weeks > summary{display:none !important;}
+    @page{size:letter landscape;margin:.45in;}
+    body{background:#fff;font-size:10pt;}
+    .toolbar,.sitenav,.navwrap,.panel,.addbtn,.banner,details.weeks > summary{display:none !important;}
     .sheet{max-width:none;padding:0;}
     .term{break-inside:avoid;border-color:#bbb;}
     .fld,.wfld,.tnotes,.cellfld{background:#fff;border-color:#ddd;}
-    @page{size:letter landscape;}
     .yearwrap{overflow:visible;border-color:#bbb;break-inside:avoid;}
-    table.byclass{min-width:0;font-size:8.5pt;}
+    table.byclass{min-width:0;font-size:9pt;}
     table.byclass th.rowh,table.byclass td.rowh{position:static;}
-    details.weeks[open] > summary{display:none;}
   }
 </style>
 </head>
 <body>
 
-<div class="navwrap">
+<div class="navwrap wrap">
   <nav class="sitenav">
     <a class="brandlink" href="index.html">Bible Class Calendar</a>
     <a class="nl" href="index.html">Home</a>
@@ -229,11 +204,11 @@
 
 <div class="toolbar">
   <span class="brand">Planner</span>
-  <span><label for="year">Year</label><input type="number" id="year" min="2024" max="2060" step="1"></span>
-  <span id="status">Ready</span>
-  <span class="viewtabs">
-    <button id="btnByClass" class="on">By class</button><button id="btnByTerm">By term</button>
-  </span>
+  <span><span class="tlab">Year</span><input type="number" id="year" min="2024" max="2060" step="1"></span>
+  <span class="viewtabs"><button id="btnByClass" class="on">By class</button><button id="btnByTerm">By term</button></span>
+  <span id="status">Starting</span>
+  <button id="btnPull">Load</button>
+  <button id="btnPush" class="primary">Save to GitHub</button>
   <button id="btnExport">Export</button>
   <button id="btnImport">Import</button>
   <button id="btnPrint">Print</button>
@@ -243,11 +218,40 @@
 
 <div class="sheet">
 
+  <div id="bannerHost"></div>
+
   <section>
+    <details class="panel" id="syncPanel">
+      <summary>GitHub sync &amp; access token</summary>
+      <div class="panel-body">
+        <p class="hint">The plan is stored as one file in your repository. Reading it is public, so the current plan loads for every visitor with no setup. Saving requires a token, which is kept in this browser only and never written into the site.</p>
+
+        <div class="cfgrow"><label for="cfgOwner">GitHub user</label><input id="cfgOwner" type="text"></div>
+        <div class="cfgrow"><label for="cfgRepo">Repository</label><input id="cfgRepo" type="text"></div>
+        <div class="cfgrow"><label for="cfgPath">File path</label><input id="cfgPath" type="text"></div>
+        <div class="cfgrow"><label for="cfgBranch">Branch</label><input id="cfgBranch" type="text"></div>
+        <div class="cfgrow"><label for="cfgToken">Access token</label><input id="cfgToken" type="password" placeholder="github_pat_…" autocomplete="off"></div>
+
+        <div class="cfgbtns">
+          <button id="btnSaveCfg">Save settings on this computer</button>
+          <button id="btnClearTok">Forget token</button>
+          <button id="btnTest">Test connection</button>
+        </div>
+
+        <div class="tokstate" id="tokState"></div>
+
+        <p class="hint" style="margin-top:16px;">
+          To create a token: GitHub, then Settings, Developer settings, Personal access tokens, Fine-grained tokens.
+          Give it access to only the <code>devdinosaur.github.io</code> repository, set Repository permissions so that Contents is
+          <b>Read and write</b>, and choose an expiration you are willing to renew. Paste it above and save. Once per computer.
+        </p>
+      </div>
+    </details>
+
     <details class="panel" id="clsPanel">
       <summary>Classes &amp; rooms</summary>
       <div class="panel-body">
-        <p class="hint">Rename these to match your age bands. "Day" controls which terms and which weeks a class shows up in.</p>
+        <p class="hint">Rename these to match your age bands. The day setting controls which terms and which weeks a class appears in.</p>
         <div id="clsList"></div>
         <button class="addbtn" id="btnAddClass">+ Add a class</button>
       </div>
@@ -264,137 +268,251 @@
 
   var SUN_LEN = [13,9,4,9,13,4];
   var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  var KEY = "biblecal:v1";
+  var LS_PLAN = "biblecal.plan", LS_CFG = "biblecal.cfg", LS_TOK = "biblecal.token";
 
   function defaultState(){
     return {
-      year: 2027,
-      view: "class",
+      year: 2027, view: "class", savedAt: "", syncedAt: "",
       classes: [
-        {id:"c1", name:"Adult 1",           day:"sun",  group:"Adult"},
-        {id:"c2", name:"Adult 2",           day:"sun",  group:"Adult"},
-        {id:"c3", name:"Adult",             day:"wed",  group:"Adult"},
-        {id:"c4", name:"High School",       day:"sun",  group:"Youth"},
-        {id:"c5", name:"Middle School",     day:"both", group:"Youth"},
-        {id:"c6", name:"Upper Elementary",  day:"both", group:"Youth"},
-        {id:"c7", name:"Lower Elementary",  day:"both", group:"Youth"},
-        {id:"c8", name:"Cradle Roll",       day:"sun",  group:"Other"}
+        {id:"c1", name:"Adult 1",          day:"sun",  group:"Adult"},
+        {id:"c2", name:"Adult 2",          day:"sun",  group:"Adult"},
+        {id:"c3", name:"Adult",            day:"wed",  group:"Adult"},
+        {id:"c4", name:"High School",      day:"sun",  group:"Youth"},
+        {id:"c5", name:"Middle School",    day:"both", group:"Youth"},
+        {id:"c6", name:"Upper Elementary", day:"both", group:"Youth"},
+        {id:"c7", name:"Lower Elementary", day:"both", group:"Youth"},
+        {id:"c8", name:"Cradle Roll",      day:"sun",  group:"Other"}
       ],
       terms: {}
     };
   }
+  function defaultCfg(){
+    return {owner:"devdinosaur", repo:"devdinosaur.github.io", path:"calendar/plan.json", branch:"main"};
+  }
 
-  var state = defaultState();
-  var seq = 100;
+  var state = defaultState(), cfg = defaultCfg(), token = "", remoteSha = null, seq = 100;
 
-  /* ---------- dates ---------- */
+  function lsGet(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ window.localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+  function lsDel(k){ try{ window.localStorage.removeItem(k); }catch(e){} }
+  function setStatus(m){ document.getElementById("status").textContent = m; }
+
+  var saveTimer = null;
+  function saveLocal(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      var ok = lsSet(LS_PLAN, JSON.stringify(state));
+      if(!ok){ setStatus("Not saving — export"); return; }
+      setStatus(state.savedAt ? "Synced" : "Saved on this computer");
+    }, 400);
+  }
+  function touched(){ state.savedAt = ""; saveLocal(); }
+
+  /* dates */
   function sundaysIn(year){
     var d = new Date(year,0,1);
-    while(d.getDay() !== 0){ d.setDate(d.getDate()+1); }
+    while(d.getDay() !== 0) d.setDate(d.getDate()+1);
     var out = [];
-    while(d.getFullYear() === year){
-      out.push(new Date(d));
-      d.setDate(d.getDate()+7);
-    }
+    while(d.getFullYear() === year){ out.push(new Date(d)); d.setDate(d.getDate()+7); }
     return out;
   }
   function plus(d,n){ var x = new Date(d); x.setDate(x.getDate()+n); return x; }
   function fmt(d){ return MON[d.getMonth()] + " " + d.getDate(); }
-  function fmtY(d){ return MON[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); }
-
   function buildTerms(year){
-    var suns = sundaysIn(year);
-    var lens = SUN_LEN.slice();
-    var extra = suns.length - 52;
-    if(extra > 0){ lens[5] += extra; }
+    var suns = sundaysIn(year), lens = SUN_LEN.slice(), extra = suns.length - 52;
+    if(extra > 0) lens[5] += extra;
     var terms = [], i = 0;
-    for(var t=0; t<lens.length; t++){
+    for(var t=0;t<lens.length;t++){
       var weeks = [];
-      for(var w=0; w<lens[t]; w++){
-        var s = suns[i+w];
-        weeks.push({ sun:s, wed:plus(s,3) });
-      }
-      terms.push({ idx:t, len:lens[t], weeks:weeks, extra:(t===5 && extra>0) ? extra : 0 });
+      for(var w=0;w<lens[t];w++){ var s = suns[i+w]; weeks.push({sun:s, wed:plus(s,3)}); }
+      terms.push({idx:t, len:lens[t], weeks:weeks, extra:(t===5 && extra>0)?extra:0});
       i += lens[t];
     }
     return terms;
   }
 
-  /* ---------- state helpers ---------- */
-  function term(t){
-    if(!state.terms[t]) state.terms[t] = { assign:{}, weeks:{}, notes:"" };
-    return state.terms[t];
-  }
-  function assign(t, cid){
-    var T = term(t);
-    if(!T.assign[cid]) T.assign[cid] = { topic:"", teacher:"" };
-    return T.assign[cid];
-  }
-  function weekVal(t, w, cid){
-    var T = term(t);
-    return (T.weeks[w] && T.weeks[w][cid]) || "";
-  }
-  function setWeek(t, w, cid, v){
-    var T = term(t);
-    if(!T.weeks[w]) T.weeks[w] = {};
-    T.weeks[w][cid] = v;
-  }
-  function meets(c, day){ return c.day === day || c.day === "both"; }
+  /* state helpers */
+  function term(t){ if(!state.terms[t]) state.terms[t] = {assign:{}, weeks:{}, notes:""}; return state.terms[t]; }
+  function assign(t,cid){ var T = term(t); if(!T.assign[cid]) T.assign[cid] = {topic:"", teacher:""}; return T.assign[cid]; }
+  function weekVal(t,w,cid){ var T = term(t); return (T.weeks[w] && T.weeks[w][cid]) || ""; }
+  function setWeek(t,w,cid,v){ var T = term(t); if(!T.weeks[w]) T.weeks[w] = {}; T.weeks[w][cid] = v; }
+  function meets(c,day){ return c.day === day || c.day === "both"; }
   function isSummerWed(t){ return t === 2 || t === 3; }
-
-  /* ---------- persistence ---------- */
-  var saveTimer = null, statusEl = null;
-  function setStatus(msg){
-    if(!statusEl) statusEl = document.getElementById("status");
-    statusEl.textContent = msg;
+  function hasContent(){
+    if(!state.terms) return false;
+    for(var k in state.terms){
+      var T = state.terms[k];
+      if(T.notes) return true;
+      for(var c in T.assign){ if(T.assign[c].topic || T.assign[c].teacher) return true; }
+      for(var w in T.weeks){ for(var f in T.weeks[w]){ if(T.weeks[w][f]) return true; } }
+    }
+    return false;
   }
-  function save(){
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(function(){
-      var payload = JSON.stringify(state);
-      if(window.storage && window.storage.set){
-        window.storage.set(KEY, payload).then(function(){
-          setStatus("Saved " + new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}));
-        })["catch"](function(){ setStatus("Unsaved — export"); });
-      } else {
-        setStatus("Unsaved — export");
+
+  /* github */
+  function b64enc(str){
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for(var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function b64dec(b){
+    var bin = atob(String(b).replace(/\s/g,""));
+    var bytes = new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function apiUrl(){
+    return "https://api.github.com/repos/" + encodeURIComponent(cfg.owner) + "/" +
+           encodeURIComponent(cfg.repo) + "/contents/" +
+           cfg.path.split("/").map(encodeURIComponent).join("/");
+  }
+  function headers(){
+    var h = {"Accept":"application/vnd.github+json"};
+    if(token) h["Authorization"] = "Bearer " + token;
+    return h;
+  }
+  function ghGet(){
+    return fetch(apiUrl() + "?ref=" + encodeURIComponent(cfg.branch) + "&t=" + Date.now(), {headers:headers()})
+      .then(function(r){
+        if(r.status === 404) return {missing:true};
+        if(r.status === 401) throw new Error("Token rejected. Check it under GitHub sync.");
+        if(!r.ok) throw new Error("GitHub read failed (" + r.status + ").");
+        return r.json().then(function(j){ return {sha:j.sha, data:JSON.parse(b64dec(j.content))}; });
+      });
+  }
+  function ghPut(msg){
+    var body = {message:msg, content:b64enc(JSON.stringify(state,null,2)), branch:cfg.branch};
+    if(remoteSha) body.sha = remoteSha;
+    var h = headers(); h["Content-Type"] = "application/json";
+    return fetch(apiUrl(), {method:"PUT", headers:h, body:JSON.stringify(body)})
+      .then(function(r){
+        if(r.status === 401) throw new Error("Token rejected. Check it under GitHub sync.");
+        if(r.status === 403) throw new Error("That token cannot write to this repository.");
+        if(r.status === 409 || r.status === 422) throw new Error("conflict");
+        if(!r.ok) throw new Error("Save failed (" + r.status + ").");
+        return r.json();
+      })
+      .then(function(j){ remoteSha = j.content.sha; return j; });
+  }
+
+  function adopt(remote){
+    state = remote;
+    state.syncedAt = remote.savedAt || "";
+    if(!state.view) state.view = "class";
+    lsSet(LS_PLAN, JSON.stringify(state));
+    document.getElementById("year").value = state.year;
+    renderClasses(); renderView();
+    setStatus("Loaded from GitHub");
+    clearBanner();
+  }
+
+  function pull(silent){
+    setStatus("Loading…");
+    return ghGet().then(function(res){
+      if(res.missing){
+        remoteSha = null;
+        setStatus("No plan file yet");
+        if(!silent) alert("No plan file exists yet at " + cfg.path + ". Saving once will create it.");
+        return;
       }
-    }, 500);
-  }
-  function load(done){
-    if(window.storage && window.storage.get){
-      window.storage.get(KEY).then(function(r){
-        if(r && r.value){
-          try { state = JSON.parse(r.value); setStatus("Loaded"); } catch(e){}
-        }
-        done();
-      })["catch"](function(){ done(); });
-    } else { done(); }
+      remoteSha = res.sha;
+      var remote = res.data;
+      if(!hasContent()){ adopt(remote); return; }
+      var differs = (remote.savedAt || "") !== (state.syncedAt || "");
+      if(!differs){ setStatus("Up to date"); return; }
+      if(silent){ offerRemote(remote); return; }
+      var unsaved = !state.savedAt;
+      if(unsaved && !confirm("The copy on GitHub is different and you have unsaved changes here. Load the GitHub copy and discard yours?")){
+        setStatus("Kept local copy"); return;
+      }
+      adopt(remote);
+    })["catch"](function(e){
+      setStatus("Offline or unreachable");
+      if(!silent) alert(e.message);
+    });
   }
 
-  /* ---------- render ---------- */
-  function el(tag, cls, txt){
-    var n = document.createElement(tag);
-    if(cls) n.className = cls;
-    if(txt !== undefined) n.textContent = txt;
-    return n;
+  function push(){
+    if(!token){
+      alert("No access token saved on this computer. Open GitHub sync below and paste one in.");
+      document.getElementById("syncPanel").open = true;
+      return;
+    }
+    setStatus("Saving…");
+    var stamp = new Date().toISOString();
+    state.savedAt = stamp;
+    state.syncedAt = stamp;
+    ghPut("Update Bible class plan (" + state.year + ")")
+      .then(function(){
+        lsSet(LS_PLAN, JSON.stringify(state));
+        setStatus("Saved to GitHub " + new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}));
+        clearBanner();
+      })["catch"](function(e){
+        state.savedAt = "";
+        if(e.message === "conflict"){
+          setStatus("Conflict");
+          banner("Someone saved a newer copy to GitHub since this page loaded.", [
+            ["Load theirs", function(){ ghGet().then(function(r){ if(!r.missing){ remoteSha = r.sha; adopt(r.data); } }); }],
+            ["Overwrite with mine", function(){ ghGet().then(function(r){ remoteSha = r.missing ? null : r.sha; clearBanner(); push(); }); }]
+          ]);
+        } else {
+          setStatus("Save failed");
+          alert(e.message);
+        }
+      });
   }
-  function field(cls, val, ph, onInput){
+
+  /* banner */
+  function clearBanner(){ document.getElementById("bannerHost").innerHTML = ""; }
+  function banner(text, actions){
+    var host = document.getElementById("bannerHost");
+    host.innerHTML = "";
+    var b = el("div","banner");
+    b.appendChild(el("span",null,text));
+    (actions||[]).forEach(function(a){
+      var btn = el("button",null,a[0]);
+      btn.addEventListener("click", a[1]);
+      b.appendChild(btn);
+    });
+    var x = el("button",null,"Dismiss");
+    x.addEventListener("click", clearBanner);
+    b.appendChild(x);
+    host.appendChild(b);
+  }
+  function offerRemote(remote){
+    var when = remote.savedAt
+      ? new Date(remote.savedAt).toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})
+      : "recently";
+    banner("A different copy of the plan was saved to GitHub on " + when + ".", [["Load it", function(){ adopt(remote); }]]);
+    setStatus("Newer copy available");
+  }
+
+  /* render helpers */
+  function el(tag,cls,txt){ var n = document.createElement(tag); if(cls) n.className = cls; if(txt !== undefined) n.textContent = txt; return n; }
+  function field(cls,val,ph,onInput){
     var i = document.createElement("input");
     i.type = "text"; i.className = cls; i.value = val || ""; i.placeholder = ph || "";
-    i.addEventListener("input", function(){ onInput(i.value); save(); });
+    i.addEventListener("input", function(){ onInput(i.value); touched(); });
     return i;
+  }
+  function paintNames(cid,val){
+    var nodes = document.querySelectorAll('[data-name="'+cid+'"]');
+    for(var i=0;i<nodes.length;i++){
+      var target = nodes[i].querySelector(".yrname") || nodes[i];
+      if(target.firstChild && target.firstChild.nodeType === 3) target.firstChild.nodeValue = val;
+      else target.textContent = val;
+    }
   }
 
   function renderClasses(){
     var host = document.getElementById("clsList");
     host.innerHTML = "";
-    state.classes.forEach(function(c, ix){
+    state.classes.forEach(function(c,ix){
       var row = el("div","clsrow");
 
       var nm = document.createElement("input");
       nm.type = "text"; nm.value = c.name; nm.placeholder = "Class name";
-      nm.addEventListener("input", function(){ c.name = nm.value; save(); paintNames(c.id, nm.value); });
+      nm.addEventListener("input", function(){ c.name = nm.value; touched(); paintNames(c.id, nm.value); });
       row.appendChild(nm);
 
       var dsel = document.createElement("select");
@@ -403,7 +521,7 @@
         if(c.day === o[0]) op.selected = true;
         dsel.appendChild(op);
       });
-      dsel.addEventListener("change", function(){ c.day = dsel.value; save(); renderView(); });
+      dsel.addEventListener("change", function(){ c.day = dsel.value; touched(); renderView(); });
       row.appendChild(dsel);
 
       var gsel = document.createElement("select");
@@ -412,28 +530,23 @@
         if(c.group === g) op.selected = true;
         gsel.appendChild(op);
       });
-      gsel.addEventListener("change", function(){ c.group = gsel.value; save(); renderView(); });
+      gsel.addEventListener("change", function(){ c.group = gsel.value; touched(); renderView(); });
       row.appendChild(gsel);
 
-      var rm = el("button", null, "✕");
+      var rm = el("button",null,"✕");
       rm.title = "Remove this class";
       rm.addEventListener("click", function(){
         if(!confirm("Remove " + c.name + "? Anything entered for it is deleted.")) return;
-        state.classes.splice(ix,1); save(); renderClasses(); renderView();
+        state.classes.splice(ix,1); touched(); renderClasses(); renderView();
       });
       row.appendChild(rm);
 
       host.appendChild(row);
     });
   }
-  function paintNames(cid, val){
-    var nodes = document.querySelectorAll('[data-name="'+cid+'"]');
-    for(var i=0;i<nodes.length;i++){ nodes[i].firstChild.nodeValue = val; }
-  }
 
   function renderView(){
-    var tabs = [["btnByClass","class"],["btnByTerm","term"]];
-    tabs.forEach(function(p){
+    [["btnByClass","class"],["btnByTerm","term"]].forEach(function(p){
       var b = document.getElementById(p[0]);
       if(b) b.className = (state.view === p[1]) ? "on" : "";
     });
@@ -446,8 +559,8 @@
     var terms = buildTerms(state.year);
 
     var head = el("div");
-    head.appendChild(el("h2", null, state.year + " at a glance"));
-    head.appendChild(el("p", "sub", "Rows are classes · columns are terms · everything here is editable"));
+    head.appendChild(el("h2",null, state.year + " at a glance"));
+    head.appendChild(el("p","sub","Rows are classes · columns are terms · everything here is editable"));
     host.appendChild(head);
 
     var wrap = el("div","yearwrap");
@@ -460,8 +573,7 @@
       var th = document.createElement("th");
       th.appendChild(el("span","thTerm","Term " + (T.idx+1)));
       th.appendChild(el("span","thWk" + (T.len>=13?" w13":(T.len<=4?" w4":"")), T.len + " wks"));
-      var d = el("span","thDates", fmt(T.weeks[0].sun) + " – " + fmt(T.weeks[T.weeks.length-1].sun));
-      th.appendChild(d);
+      th.appendChild(el("span","thDates", fmt(T.weeks[0].sun) + " – " + fmt(T.weeks[T.weeks.length-1].sun)));
       hr.appendChild(th);
     });
     thead.appendChild(hr);
@@ -473,11 +585,9 @@
     state.classes.forEach(function(c){
       if(c.group !== lastGroup){
         var band = el("tr","grpband");
-        var bd = document.createElement("td");
-        bd.className = "rowh"; bd.textContent = c.group;
+        var bd = document.createElement("td"); bd.className = "rowh"; bd.textContent = c.group;
         band.appendChild(bd);
-        var bd2 = document.createElement("td");
-        bd2.colSpan = 6; bd2.textContent = "";
+        var bd2 = document.createElement("td"); bd2.colSpan = 6;
         band.appendChild(bd2);
         tb.appendChild(band);
         lastGroup = c.group;
@@ -494,17 +604,15 @@
       tr.appendChild(nameCell);
 
       var wedOnly = (c.day === "wed");
-      for(var t=0; t<6; t++){
+      for(var t=0;t<6;t++){
         if(wedOnly && t === 3) continue;
-
         var td = document.createElement("td");
         var merged = wedOnly && t === 2;
         if(merged){
           td.colSpan = 2;
           td.className = "summerspan";
-          var lab = el("span","spanlab","Summer series · " +
-            fmt(terms[2].weeks[0].wed) + " – " + fmt(terms[3].weeks[terms[3].weeks.length-1].wed) + " · 13 wks");
-          td.appendChild(lab);
+          td.appendChild(el("span","spanlab","Summer series · " +
+            fmt(terms[2].weeks[0].wed) + " – " + fmt(terms[3].weeks[terms[3].weeks.length-1].wed) + " · 13 wks"));
         }
         (function(ti){
           var a = assign(ti, c.id);
@@ -521,24 +629,20 @@
     host.appendChild(wrap);
 
     var foot = el("p","hint","Wednesday-only classes show one merged cell across Terms 3 and 4, because Wednesday runs the summer series as a single block. Switch to By term for term notes and the week-by-week grids.");
-    foot.style.marginTop = "12px";
+    foot.style.marginTop = "14px";
     host.appendChild(foot);
   }
 
   function renderTerms(){
     var host = document.getElementById("terms");
     host.innerHTML = "";
-    var terms = buildTerms(state.year);
-
-    terms.forEach(function(T){
+    buildTerms(state.year).forEach(function(T){
       var t = T.idx;
       var card = el("div","term");
 
-      /* header */
       var head = el("div","thead");
       head.appendChild(el("span","tnum","Term " + (t+1)));
-      var wk = el("span","twk" + (T.len>=13?" w13":(T.len<=4?" w4":"")), T.len + " weeks");
-      head.appendChild(wk);
+      head.appendChild(el("span","twk" + (T.len>=13?" w13":(T.len<=4?" w4":"")), T.len + " weeks"));
 
       var first = T.weeks[0], last = T.weeks[T.weeks.length-1];
       var dl = el("span","tdates");
@@ -553,14 +657,13 @@
 
       var body = el("div","tbody");
 
-      /* assignment table */
       var tbl = el("table","assign");
       var thead = document.createElement("thead");
-      thead.innerHTML = "<tr><th style='width:190px'>Class</th><th>Study or topic</th><th style='width:220px'>Teacher</th></tr>";
+      thead.innerHTML = "<tr><th style='width:210px'>Class</th><th>Study or topic</th><th style='width:240px'>Teacher</th></tr>";
       tbl.appendChild(thead);
       var tb = document.createElement("tbody");
-
       var lastGroup = null;
+
       state.classes.forEach(function(c){
         if(c.group !== lastGroup){
           var g = el("tr","grp");
@@ -599,24 +702,21 @@
         body.appendChild(box);
       }
 
-      /* notes */
       var nt = document.createElement("textarea");
       nt.className = "tnotes";
       nt.placeholder = "Term notes: conflicts, VBS, gospel meeting, flex weeks, who to ask.";
       nt.value = term(t).notes || "";
-      nt.addEventListener("input", function(){ term(t).notes = nt.value; save(); });
+      nt.addEventListener("input", function(){ term(t).notes = nt.value; touched(); });
       body.appendChild(nt);
 
-      /* weeks */
       var det = document.createElement("details");
       det.className = "weeks";
       var sm = document.createElement("summary");
       sm.textContent = "Week by week · " + T.len + " Sundays, " + T.len + " Wednesdays";
       det.appendChild(sm);
-
       var built = false;
       det.addEventListener("toggle", function(){
-        if(det.open && !built){ det.appendChild(weekGrid(t, T)); built = true; }
+        if(det.open && !built){ det.appendChild(weekGrid(t,T)); built = true; }
       });
       body.appendChild(det);
 
@@ -625,15 +725,13 @@
     });
   }
 
-  function weekGrid(t, T){
+  function weekGrid(t,T){
     var wrap = document.createElement("div");
-
     ["sun","wed"].forEach(function(day){
-      var cols = state.classes.filter(function(c){ return meets(c, day); });
+      var cols = state.classes.filter(function(c){ return meets(c,day); });
       if(!cols.length) return;
 
-      var lbl = el("p","daylabel", day === "sun" ? "Sundays" : "Wednesdays");
-      wrap.appendChild(lbl);
+      wrap.appendChild(el("p","daylabel", day === "sun" ? "Sundays" : "Wednesdays"));
 
       var sc = el("div","scroller");
       var tbl = el("table","wk");
@@ -648,18 +746,17 @@
       thead.appendChild(hr); tbl.appendChild(thead);
 
       var tb = document.createElement("tbody");
-      T.weeks.forEach(function(W, wi){
+      T.weeks.forEach(function(W,wi){
         var tr = document.createElement("tr");
         var td0 = document.createElement("td");
         td0.appendChild(el("span","wdate", fmt(day === "sun" ? W.sun : W.wed)));
         td0.appendChild(document.createTextNode(" "));
         td0.appendChild(el("span","wnum","wk " + (wi+1)));
         tr.appendChild(td0);
-
         cols.forEach(function(c){
           var td = document.createElement("td");
           var key = day + ":" + c.id;
-          td.appendChild(field("wfld", weekVal(t, wi, key), "", function(v){ setWeek(t, wi, key, v); }));
+          td.appendChild(field("wfld", weekVal(t,wi,key), "", function(v){ setWeek(t,wi,key,v); }));
           tr.appendChild(td);
         });
         tb.appendChild(tr);
@@ -668,35 +765,89 @@
       sc.appendChild(tbl);
       wrap.appendChild(sc);
     });
-
     return wrap;
   }
 
-  /* ---------- toolbar ---------- */
+  /* sync panel */
+  function paintTokState(){
+    var n = document.getElementById("tokState");
+    if(token){
+      n.className = "tokstate ok";
+      n.textContent = "A token is saved in this browser. This computer can save changes to GitHub.";
+    } else {
+      n.className = "tokstate";
+      n.textContent = "No token on this computer. You can read the plan here, but not save it.";
+    }
+  }
+  function wireSync(){
+    document.getElementById("cfgOwner").value  = cfg.owner;
+    document.getElementById("cfgRepo").value   = cfg.repo;
+    document.getElementById("cfgPath").value   = cfg.path;
+    document.getElementById("cfgBranch").value = cfg.branch;
+    paintTokState();
+
+    document.getElementById("btnSaveCfg").addEventListener("click", function(){
+      cfg.owner  = document.getElementById("cfgOwner").value.trim();
+      cfg.repo   = document.getElementById("cfgRepo").value.trim();
+      cfg.path   = document.getElementById("cfgPath").value.trim().replace(/^\/+/,"");
+      cfg.branch = document.getElementById("cfgBranch").value.trim() || "main";
+      lsSet(LS_CFG, JSON.stringify(cfg));
+      var tk = document.getElementById("cfgToken").value.trim();
+      if(tk){ token = tk; lsSet(LS_TOK, tk); document.getElementById("cfgToken").value = ""; }
+      paintTokState();
+      remoteSha = null;
+      setStatus("Settings saved");
+    });
+
+    document.getElementById("btnClearTok").addEventListener("click", function(){
+      token = ""; lsDel(LS_TOK);
+      document.getElementById("cfgToken").value = "";
+      paintTokState(); setStatus("Token forgotten");
+    });
+
+    document.getElementById("btnTest").addEventListener("click", function(){
+      setStatus("Testing…");
+      ghGet().then(function(res){
+        if(res.missing){
+          alert("Connected to the repository. No plan file exists yet at " + cfg.path + ". Saving once will create it.");
+          setStatus("No plan file yet"); return;
+        }
+        remoteSha = res.sha;
+        alert("Connected. Found a plan for " + (res.data.year || "?") +
+              (res.data.savedAt ? ", last saved " + new Date(res.data.savedAt).toLocaleString() : "") +
+              (token ? "\n\nToken present, so saving should work." : "\n\nNo token, so this computer can read but not save."));
+        setStatus("Connected");
+      })["catch"](function(e){ setStatus("Connection failed"); alert(e.message); });
+    });
+  }
+
+  /* toolbar */
   function wireToolbar(){
     var y = document.getElementById("year");
     y.value = state.year;
     y.addEventListener("change", function(){
-      var v = parseInt(y.value, 10);
+      var v = parseInt(y.value,10);
       if(isNaN(v) || v < 2024 || v > 2060){ y.value = state.year; return; }
-      state.year = v; save(); renderView();
+      state.year = v; touched(); renderView();
     });
 
     document.getElementById("btnAddClass").addEventListener("click", function(){
-      state.classes.push({ id:"c" + (seq++), name:"New class", day:"both", group:"Youth" });
-      save(); renderClasses(); renderView();
+      state.classes.push({id:"c"+(seq++), name:"New class", day:"both", group:"Youth"});
+      touched(); renderClasses(); renderView();
     });
 
-    document.getElementById("btnByClass").addEventListener("click", function(){ state.view = "class"; save(); renderView(); });
-    document.getElementById("btnByTerm").addEventListener("click", function(){ state.view = "term"; save(); renderView(); });
+    document.getElementById("btnByClass").addEventListener("click", function(){ state.view = "class"; saveLocal(); renderView(); });
+    document.getElementById("btnByTerm").addEventListener("click", function(){ state.view = "term"; saveLocal(); renderView(); });
 
+    document.getElementById("btnPull").addEventListener("click", function(){ pull(false); });
+    document.getElementById("btnPush").addEventListener("click", push);
     document.getElementById("btnPrint").addEventListener("click", function(){ window.print(); });
 
     document.getElementById("btnExport").addEventListener("click", function(){
-      var blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+      var blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "bible-class-calendar-" + state.year + ".json";
+      a.download = "bible-class-plan-" + state.year + ".json";
       a.click();
       URL.revokeObjectURL(a.href);
       setStatus("Exported");
@@ -711,29 +862,51 @@
         try{
           var s = JSON.parse(r.result);
           if(!s.classes || !s.year) throw new Error("bad file");
-          state = s; save(); document.getElementById("year").value = state.year;
+          state = s;
+          if(!state.view) state.view = "class";
+          state.savedAt = "";
+          saveLocal();
+          document.getElementById("year").value = state.year;
           renderClasses(); renderView(); setStatus("Imported");
-        }catch(e){ alert("That file could not be read as a saved calendar."); }
+        }catch(e){ alert("That file could not be read as a saved plan."); }
       };
       r.readAsText(f);
       fin.value = "";
     });
 
     document.getElementById("btnReset").addEventListener("click", function(){
-      if(!confirm("Clear everything and start over? Export first if you want a copy.")) return;
+      if(!confirm("Clear everything on this computer and start over? This does not touch what is saved on GitHub. Export first if you want a copy.")) return;
       var yr = state.year;
       state = defaultState(); state.year = yr;
-      save(); renderClasses(); renderView(); setStatus("Reset");
+      saveLocal(); renderClasses(); renderView(); setStatus("Reset");
+    });
+
+    window.addEventListener("beforeunload", function(e){
+      if(!state.savedAt && hasContent()){ e.preventDefault(); e.returnValue = ""; }
     });
   }
 
-  load(function(){
-    if(!state.view) state.view = "class";
+  /* boot */
+  (function boot(){
+    var rawCfg = lsGet(LS_CFG);
+    if(rawCfg){ try{ cfg = Object.assign(defaultCfg(), JSON.parse(rawCfg)); }catch(e){} }
+    token = lsGet(LS_TOK) || "";
+
+    var rawPlan = lsGet(LS_PLAN);
+    if(rawPlan){
+      try{
+        var s = JSON.parse(rawPlan);
+        if(s && s.classes && s.year){ state = s; if(!state.view) state.view = "class"; }
+      }catch(e){}
+    }
+
     wireToolbar();
+    wireSync();
     renderClasses();
     renderView();
-    if(!(window.storage && window.storage.set)) setStatus("Export to keep");
-  });
+    setStatus(rawPlan ? "Loaded on this computer" : "Ready");
+    pull(true);
+  })();
 })();
 </script>
 </body>

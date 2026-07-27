@@ -6,7 +6,7 @@
 <title>Bible Class Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1B2A26; --ink-soft:#4A5A55;
@@ -15,45 +15,42 @@
     --brass:#9A7B2F; --rule:#D6DDD7;
     --display:"Fraunces","Iowan Old Style",Palatino,Georgia,serif;
     --body:"Public Sans","Helvetica Neue",Arial,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding:0 20px 70px;}
-  .sheet{max-width:920px;margin:0 auto;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding:0 20px 70px;}
+  .sheet{max-width:1000px;margin:0 auto;}
 
-  .sitenav{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:16px 0 13px;border-bottom:1px solid var(--rule);margin-bottom:44px;}
-  .sitenav .brandlink{font-family:var(--display);font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
+  .sitenav{display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:18px 0 14px;border-bottom:1px solid var(--rule);margin-bottom:46px;}
+  .sitenav .brandlink{font-family:var(--display);font-size:17px;font-weight:600;color:var(--ink);text-decoration:none;margin-right:auto;letter-spacing:-.01em;}
   .sitenav .brandlink:hover{color:var(--brass);}
-  .sitenav a.nl{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
+  .sitenav a.nl{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;}
   .sitenav a.nl:hover{color:var(--ink);}
   .sitenav a.nl.on{color:var(--ink);border-bottom-color:var(--brass);}
 
-  h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,6.4vw,58px);line-height:1;letter-spacing:-.025em;margin:0 0 14px;}
-  .lede{margin:0 0 34px;max-width:56ch;font-size:16px;color:var(--ink-soft);}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,6.4vw,60px);line-height:1;letter-spacing:-.025em;margin:0 0 16px;}
+  .lede{margin:0 0 36px;max-width:58ch;font-size:17px;color:var(--ink-soft);}
 
-  /* wave */
-  .wave{background:var(--card);border:1px solid var(--rule);padding:18px 20px 15px;margin-bottom:44px;}
-  .rowlabel{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px;}
+  .wave{background:var(--card);border:1px solid var(--rule);padding:20px 22px 16px;margin-bottom:46px;}
+  .rowlabel{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:0 0 7px;}
   .bar{display:flex;width:100%;gap:2px;}
-  .seg{position:relative;padding:8px 8px 7px;color:#fff;overflow:hidden;min-width:0;}
-  .seg .n{display:block;font-family:var(--mono);font-size:14px;font-weight:700;line-height:1;}
-  .seg .lab{display:block;font-size:10px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9;margin-top:3px;}
+  .seg{position:relative;padding:10px 9px 9px;color:#fff;overflow:hidden;min-width:0;}
+  .seg .n{display:block;font-size:16px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+  .seg .lab{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.93;margin-top:4px;font-weight:500;}
   .d13{background:var(--deep);} .d9{background:var(--mid);} .d4{background:var(--light);color:var(--ink);}
   .dsummer{background:var(--brass);}
   .split{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed rgba(255,255,255,.5);}
-  .waveft{margin:13px 0 0;padding-top:11px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);}
+  .waveft{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--rule);font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);}
 
-  /* cards */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);border:1px solid var(--rule);}
-  a.card{display:block;background:var(--card);padding:26px 24px 28px;text-decoration:none;color:var(--ink);transition:background .12s;}
+  a.card{display:block;background:var(--card);padding:28px 26px 30px;text-decoration:none;color:var(--ink);transition:background .12s;}
   a.card:hover{background:#FBFCFB;}
-  a.card .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:9px;}
-  a.card h2{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.02em;margin:0 0 9px;line-height:1.05;}
-  a.card p{margin:0 0 16px;font-size:14px;color:var(--ink-soft);}
-  a.card .go{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;border-bottom:2px solid var(--brass);padding-bottom:2px;}
+  a.card .kicker{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--brass);display:block;margin-bottom:10px;}
+  a.card h2{font-family:var(--display);font-size:28px;font-weight:600;letter-spacing:-.02em;margin:0 0 10px;line-height:1.05;}
+  a.card p{margin:0 0 18px;font-size:15px;color:var(--ink-soft);}
+  a.card .go{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:2px solid var(--brass);padding-bottom:2px;}
   a.card:hover .go{color:var(--brass);}
 
-  footer{margin-top:44px;padding-top:13px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);}
+  footer{margin-top:46px;padding-top:14px;border-top:1px solid var(--rule);font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);}
 
   @media (max-width:680px){
     .cards{grid-template-columns:1fr;}
@@ -84,7 +81,7 @@
       <div class="seg d13" style="width:25%"><span class="split" style="left:30.8%"></span><span class="split" style="left:61.5%"></span><span class="n">13</span><span class="lab">Term 5</span></div>
       <div class="seg d4" style="width:7.7%"><span class="n">4</span><span class="lab">T6</span></div>
     </div>
-    <p class="rowlabel" style="margin-top:15px">Wednesday · five terms</p>
+    <p class="rowlabel" style="margin-top:16px">Wednesday · five terms</p>
     <div class="bar">
       <div class="seg d13" style="width:25%"><span class="n">13</span><span class="lab">Term 1</span></div>
       <div class="seg d9" style="width:17.3%"><span class="n">9</span><span class="lab">Term 2</span></div>
@@ -105,7 +102,7 @@
     <a class="card" href="cal-plan.html">
       <span class="kicker">Working tool</span>
       <h2>Planner</h2>
-      <p>Fill in the year. Studies and teachers for every class, week by week if you want it, for any year you choose. Everything on the page is editable.</p>
+      <p>Fill in the year. Studies and teachers for every class, week by week if you want it, for any year you choose. Saves to GitHub so both computers see the same plan.</p>
       <span class="go">Open →</span>
     </a>
   </div>
