@@ -242,8 +242,10 @@
 
         <p class="hint" style="margin-top:16px;">
           To create a token: GitHub, then Settings, Developer settings, Personal access tokens, Fine-grained tokens.
-          Give it access to only the <code>devdinosaur.github.io</code> repository, set Repository permissions so that Contents is
-          <b>Read and write</b>, and choose an expiration you are willing to renew. Paste it above and save. Once per computer.
+          Two settings matter and both are easy to miss. Under <b>Repository access</b>, choose "Only select repositories"
+          and pick <code>devdinosaur.github.io</code>; the default of "Public repositories (read-only)" cannot save and
+          reports a 404. Then under <b>Repository permissions</b>, set <b>Contents</b> to "Read and write". Paste the token
+          above and save. Once per computer.
         </p>
       </div>
     </details>
@@ -386,13 +388,78 @@
     var h = headers(); h["Content-Type"] = "application/json";
     return fetch(apiUrl(), {method:"PUT", headers:h, body:JSON.stringify(body)})
       .then(function(r){
-        if(r.status === 401) throw new Error("Token rejected. Check it under GitHub sync.");
+        if(r.status === 401) throw new Error("Token rejected. It may be expired or mistyped.");
         if(r.status === 403) throw new Error("That token cannot write to this repository.");
+        if(r.status === 404) throw new Error("GitHub returned 404 on save. That is almost always the token, not the file: a token that cannot write to a repository gets 404 rather than 403. Run Test connection below for a specific answer.");
         if(r.status === 409 || r.status === 422) throw new Error("conflict");
         if(!r.ok) throw new Error("Save failed (" + r.status + ").");
         return r.json();
       })
       .then(function(j){ remoteSha = j.content.sha; return j; });
+  }
+
+  /* step-by-step diagnosis: identity, repo access, write permission, branch, file */
+  function ghDiag(){
+    var out = [];
+    var api = "https://api.github.com/";
+    var repoUrl = api + "repos/" + encodeURIComponent(cfg.owner) + "/" + encodeURIComponent(cfg.repo);
+
+    if(!token){
+      return Promise.resolve("No token on this computer.\n\nThis page can read the plan but cannot save it. Paste a token above and press Save settings.");
+    }
+
+    return fetch(api + "user", {headers:headers()})
+      .then(function(r){
+        if(r.status === 401) throw new Error("Step 1 failed: GitHub rejected the token.\n\nIt is expired, mistyped, or was revoked. Generate a new one.");
+        if(!r.ok) throw new Error("Step 1 failed: could not reach GitHub (" + r.status + ").");
+        return r.json();
+      })
+      .then(function(u){
+        out.push("1. Token is valid, signed in as " + u.login + ".");
+        return fetch(repoUrl, {headers:headers()});
+      })
+      .then(function(r){
+        if(r.status === 404){
+          throw new Error(out.join("\n") +
+            "\n\n2. FAILED: this token cannot see " + cfg.owner + "/" + cfg.repo + ".\n\n" +
+            "Either the user or repository name above is wrong, or the token was not granted access to this repository. " +
+            "On a fine-grained token, Repository access must be set to \"Only select repositories\" with this one chosen. " +
+            "The default of \"Public repositories (read-only)\" produces exactly this error.");
+        }
+        if(!r.ok) throw new Error("Step 2 failed (" + r.status + ").");
+        return r.json();
+      })
+      .then(function(repo){
+        out.push("2. Repository found. Default branch is " + repo.default_branch + ".");
+        var perms = repo.permissions || {};
+        if(!perms.push){
+          throw new Error(out.join("\n") +
+            "\n\n3. FAILED: this token has read access but not write access.\n\n" +
+            "Edit the token on GitHub and set Repository permissions so that Contents is \"Read and write\".");
+        }
+        out.push("3. Token can write to this repository.");
+        if(repo.default_branch !== cfg.branch){
+          out.push("\nNote: the branch set here is \"" + cfg.branch + "\" but the repository default is \"" +
+                   repo.default_branch + "\". If saving still fails, change the branch above to " + repo.default_branch + ".");
+        }
+        return fetch(apiUrl() + "?ref=" + encodeURIComponent(cfg.branch) + "&t=" + Date.now(), {headers:headers()});
+      })
+      .then(function(r){
+        if(r.status === 404){
+          out.push("4. No plan file at " + cfg.path + " yet. Saving once will create it.");
+          remoteSha = null;
+          return out.join("\n");
+        }
+        if(!r.ok) throw new Error(out.join("\n") + "\n\n4. Could not read the file (" + r.status + ").");
+        return r.json().then(function(j){
+          remoteSha = j.sha;
+          var d = {};
+          try{ d = JSON.parse(b64dec(j.content)); }catch(e){}
+          out.push("4. Plan file found for " + (d.year || "?") +
+                   (d.savedAt ? ", last saved " + new Date(d.savedAt).toLocaleString() : "") + ".");
+          return out.join("\n");
+        });
+      });
   }
 
   function adopt(remote){
@@ -807,17 +874,9 @@
 
     document.getElementById("btnTest").addEventListener("click", function(){
       setStatus("Testing…");
-      ghGet().then(function(res){
-        if(res.missing){
-          alert("Connected to the repository. No plan file exists yet at " + cfg.path + ". Saving once will create it.");
-          setStatus("No plan file yet"); return;
-        }
-        remoteSha = res.sha;
-        alert("Connected. Found a plan for " + (res.data.year || "?") +
-              (res.data.savedAt ? ", last saved " + new Date(res.data.savedAt).toLocaleString() : "") +
-              (token ? "\n\nToken present, so saving should work." : "\n\nNo token, so this computer can read but not save."));
-        setStatus("Connected");
-      })["catch"](function(e){ setStatus("Connection failed"); alert(e.message); });
+      ghDiag()
+        .then(function(report){ alert(report); setStatus("Connection OK"); })
+        ["catch"](function(e){ alert(e.message); setStatus("Connection failed"); });
     });
   }
 
