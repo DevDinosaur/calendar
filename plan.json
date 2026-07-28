@@ -1,0 +1,282 @@
+{
+  "year": 2027,
+  "view": "class",
+  "savedAt": "2026-07-28T11:17:19.355Z",
+  "syncedAt": "2026-07-28T11:17:19.355Z",
+  "classes": [
+    {
+      "id": "c1",
+      "name": "Adult 1",
+      "day": "sun",
+      "group": "Adult"
+    },
+    {
+      "id": "c2",
+      "name": "Adult 2",
+      "day": "sun",
+      "group": "Adult"
+    },
+    {
+      "id": "c3",
+      "name": "Adult",
+      "day": "wed",
+      "group": "Adult"
+    },
+    {
+      "id": "c4",
+      "name": "High School",
+      "day": "sun",
+      "group": "Youth"
+    },
+    {
+      "id": "c5",
+      "name": "Middle School",
+      "day": "both",
+      "group": "Youth"
+    },
+    {
+      "id": "c6",
+      "name": "Upper Elementary",
+      "day": "both",
+      "group": "Youth"
+    },
+    {
+      "id": "c7",
+      "name": "Lower Elementary",
+      "day": "both",
+      "group": "Youth"
+    },
+    {
+      "id": "c8",
+      "name": "Cradle Roll",
+      "day": "sun",
+      "group": "Other"
+    }
+  ],
+  "terms": {
+    "0": {
+      "assign": {
+        "c1": {
+          "topic": "",
+          "teacher": "c c "
+        },
+        "c2": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c3": {
+          "topic": "",
+          "teacher": " does s"
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    },
+    "1": {
+      "assign": {
+        "c1": {
+          "topic": "vfdvd",
+          "teacher": ""
+        },
+        "c2": {
+          "topic": "",
+          "teacher": " c "
+        },
+        "c3": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    },
+    "2": {
+      "assign": {
+        "c1": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c2": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c3": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    },
+    "3": {
+      "assign": {
+        "c1": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c2": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    },
+    "4": {
+      "assign": {
+        "c1": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c2": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c3": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    },
+    "5": {
+      "assign": {
+        "c1": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c2": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c3": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c4": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c5": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c6": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c7": {
+          "topic": "",
+          "teacher": ""
+        },
+        "c8": {
+          "topic": "",
+          "teacher": ""
+        }
+      },
+      "weeks": {},
+      "notes": ""
+    }
+  }
+}
