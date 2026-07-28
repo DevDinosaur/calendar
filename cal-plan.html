@@ -376,6 +376,25 @@
     for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
     return new TextDecoder().decode(bytes);
   }
+  /* pull GitHub's own message and required-permission header off a failed response */
+  function ghFail(r){
+    return r.text().then(function(t){
+      var msg = "";
+      try{ msg = JSON.parse(t).message || ""; }catch(e){ msg = (t || "").slice(0,200); }
+      var need = r.headers.get("x-accepted-github-permissions") || "";
+      var lines = ["GitHub refused the request (" + r.status + ")."];
+      if(msg) lines.push("\nIt said: " + msg);
+      if(need) lines.push("\nPermission required: " + need);
+      if(r.status === 403 || /not accessible by personal access token/i.test(msg)){
+        lines.push("\nThis is the token's own permissions, not your account's. On GitHub, open Settings, " +
+                   "Developer settings, Personal access tokens, Fine-grained tokens, and edit this token. " +
+                   "Under Repository permissions, set Contents to \"Read and write\" and save. " +
+                   "The change takes effect right away; you do not need to generate a new token or paste it in again.");
+      }
+      return new Error(lines.join("\n"));
+    });
+  }
+
   function apiUrl(){
     return "https://api.github.com/repos/" + encodeURIComponent(cfg.owner) + "/" +
            encodeURIComponent(cfg.repo) + "/contents/" +
@@ -401,11 +420,8 @@
     var h = headers(); h["Content-Type"] = "application/json";
     return fetch(apiUrl(), {method:"PUT", headers:h, body:JSON.stringify(body)})
       .then(function(r){
-        if(r.status === 401) throw new Error("Token rejected. It may be expired or mistyped.");
-        if(r.status === 403) throw new Error("That token cannot write to this repository.");
-        if(r.status === 404) throw new Error("GitHub returned 404 on save. That is almost always the token, not the file: a token that cannot write to a repository gets 404 rather than 403. Run Test connection below for a specific answer.");
         if(r.status === 409 || r.status === 422) throw new Error("conflict");
-        if(!r.ok) throw new Error("Save failed (" + r.status + ").");
+        if(!r.ok) return ghFail(r).then(function(e){ throw e; });
         return r.json();
       })
       .then(function(j){ remoteSha = j.content.sha; return j; });
@@ -447,13 +463,12 @@
         var perms = repo.permissions || {};
         if(!perms.push){
           throw new Error(out.join("\n") +
-            "\n\n3. FAILED: this token has read access but not write access.\n\n" +
-            "Edit the token on GitHub and set Repository permissions so that Contents is \"Read and write\".");
+            "\n\n3. FAILED: your account does not have write access to this repository.");
         }
-        out.push("3. Token can write to this repository.");
+        out.push("3. Your account has write access. (This reflects your account, not the token. Step 5 tests the token itself.)");
         if(repo.default_branch !== cfg.branch){
           out.push("\nNote: the branch set here is \"" + cfg.branch + "\" but the repository default is \"" +
-                   repo.default_branch + "\". If saving still fails, change the branch above to " + repo.default_branch + ".");
+                   repo.default_branch + "\". If saving fails, change the branch above to " + repo.default_branch + ".");
         }
         return fetch(apiUrl() + "?ref=" + encodeURIComponent(cfg.branch) + "&t=" + Date.now(), {headers:headers()});
       })
@@ -461,16 +476,42 @@
         if(r.status === 404){
           out.push("4. No plan file at " + cfg.path + " yet. Saving once will create it.");
           remoteSha = null;
-          return out.join("\n");
+          return;
         }
-        if(!r.ok) throw new Error(out.join("\n") + "\n\n4. Could not read the file (" + r.status + ").");
+        if(!r.ok) return ghFail(r).then(function(e){ throw new Error(out.join("\n") + "\n\n4. " + e.message); });
         return r.json().then(function(j){
           remoteSha = j.sha;
           var d = {};
           try{ d = JSON.parse(b64dec(j.content)); }catch(e){}
           out.push("4. Plan file found for " + (d.year || "?") +
                    (d.savedAt ? ", last saved " + new Date(d.savedAt).toLocaleString() : "") + ".");
-          return out.join("\n");
+        });
+      })
+      .then(function(){
+        /* the only honest test of the token's Contents permission is an actual write */
+        var probe = api + "repos/" + encodeURIComponent(cfg.owner) + "/" + encodeURIComponent(cfg.repo) +
+                    "/contents/" + cfg.path.split("/").map(encodeURIComponent).join("/") + ".permcheck";
+        var h = headers(); h["Content-Type"] = "application/json";
+        return fetch(probe, {
+          method:"PUT", headers:h,
+          body: JSON.stringify({message:"Permission check", content: b64enc("ok"), branch: cfg.branch})
+        }).then(function(r){
+          if(!r.ok){
+            return ghFail(r).then(function(e){
+              throw new Error(out.join("\n") + "\n\n5. FAILED: the token cannot write.\n\n" + e.message);
+            });
+          }
+          return r.json().then(function(j){
+            /* clean up the probe file */
+            return fetch(probe, {
+              method:"DELETE", headers:h,
+              body: JSON.stringify({message:"Remove permission check", sha:j.content.sha, branch:cfg.branch})
+            }).then(function(dr){
+              out.push("5. Write test passed. Saving will work from this computer." +
+                       (dr.ok ? "" : "\n\nOne loose end: the test file " + cfg.path + ".permcheck could not be deleted. Remove it on GitHub."));
+              return out.join("\n");
+            });
+          });
         });
       });
   }
