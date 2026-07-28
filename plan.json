@@ -1,8 +1,8 @@
 {
   "year": 2027,
   "view": "class",
-  "savedAt": "2026-07-28T11:17:19.355Z",
-  "syncedAt": "2026-07-28T11:17:19.355Z",
+  "savedAt": "2026-07-28T11:18:17.421Z",
+  "syncedAt": "2026-07-28T11:18:17.421Z",
   "classes": [
     {
       "id": "c1",
@@ -58,7 +58,7 @@
       "assign": {
         "c1": {
           "topic": "",
-          "teacher": "c c "
+          "teacher": ""
         },
         "c2": {
           "topic": "",
@@ -66,7 +66,7 @@
         },
         "c3": {
           "topic": "",
-          "teacher": " does s"
+          "teacher": ""
         },
         "c4": {
           "topic": "",
@@ -95,12 +95,12 @@
     "1": {
       "assign": {
         "c1": {
-          "topic": "vfdvd",
+          "topic": "",
           "teacher": ""
         },
         "c2": {
           "topic": "",
-          "teacher": " c "
+          "teacher": ""
         },
         "c3": {
           "topic": "",
