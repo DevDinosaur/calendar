@@ -102,6 +102,16 @@
   .tokstate{font-size:13.5px;margin-top:14px;padding:10px 13px;background:#EEF2EF;max-width:76ch;}
   .tokstate.ok{background:#E4EFE8;}
 
+  .repolist{margin-top:16px;border:1px solid var(--rule);max-width:76ch;}
+  .repolist .rlhead{padding:10px 13px;background:#F0F3F0;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);}
+  .repolist button.rl{
+    display:block;width:100%;text-align:left;border:none;border-top:1px solid var(--rule-soft);
+    background:#fff;color:var(--ink);padding:11px 13px;font-size:15px;cursor:pointer;
+  }
+  .repolist button.rl:hover{background:#F0F5F1;}
+  .repolist button.rl .meta{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px;font-weight:400;}
+  .repolist button.rl b{font-weight:600;}
+
   /* by-class grid */
   .yearwrap{background:var(--card);border:1px solid var(--rule);overflow-x:auto;}
   table.byclass{border-collapse:collapse;width:100%;min-width:1190px;}
@@ -234,9 +244,12 @@
 
         <div class="cfgbtns">
           <button id="btnSaveCfg">Save settings on this computer</button>
+          <button id="btnListRepos">List repositories this token can reach</button>
           <button id="btnClearTok">Forget token</button>
           <button id="btnTest">Test connection</button>
         </div>
+
+        <div id="repoList"></div>
 
         <div class="tokstate" id="tokState"></div>
 
@@ -864,6 +877,57 @@
       paintTokState();
       remoteSha = null;
       setStatus("Settings saved");
+    });
+
+    document.getElementById("btnListRepos").addEventListener("click", function(){
+      var host = document.getElementById("repoList");
+      host.innerHTML = "";
+      if(!token){ alert("Paste a token above and press Save settings first."); return; }
+      setStatus("Listing…");
+      fetch("https://api.github.com/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member", {headers:headers()})
+        .then(function(r){
+          if(r.status === 401) throw new Error("GitHub rejected the token.");
+          if(!r.ok) throw new Error("Could not list repositories (" + r.status + ").");
+          return r.json();
+        })
+        .then(function(repos){
+          if(!repos.length){
+            host.innerHTML = "";
+            alert("This token cannot reach any repositories.\n\nEdit it on GitHub, set Repository access to \"Only select repositories\", and choose the one holding this site.");
+            setStatus("No repositories");
+            return;
+          }
+          var box = el("div","repolist");
+          box.appendChild(el("div","rlhead", repos.length + " repositories · click one to use it"));
+          repos.forEach(function(r){
+            var b = document.createElement("button");
+            b.className = "rl";
+            var nm = document.createElement("b");
+            nm.textContent = r.full_name;
+            b.appendChild(nm);
+            var canWrite = r.permissions && r.permissions.push;
+            b.appendChild(el("span","meta",
+              (r.private ? "private" : "public") +
+              " · default branch " + r.default_branch +
+              " · " + (canWrite ? "can write" : "READ ONLY, cannot save here")));
+            b.addEventListener("click", function(){
+              var parts = r.full_name.split("/");
+              document.getElementById("cfgOwner").value = parts[0];
+              document.getElementById("cfgRepo").value = parts[1];
+              document.getElementById("cfgBranch").value = r.default_branch;
+              var isUserSite = parts[1].toLowerCase() === (parts[0] + ".github.io").toLowerCase();
+              document.getElementById("cfgPath").value = isUserSite ? "calendar/plan.json" : "plan.json";
+              host.innerHTML = "";
+              setStatus("Picked " + r.full_name);
+              alert("Settings filled in for " + r.full_name + ".\n\nFile path set to " +
+                    (isUserSite ? "calendar/plan.json" : "plan.json") +
+                    ", which is where the plan sits relative to the repository root. Adjust it if your files live elsewhere, then press Save settings, then Test connection.");
+            });
+            box.appendChild(b);
+          });
+          host.appendChild(box);
+          setStatus("Pick a repository");
+        })["catch"](function(e){ setStatus("Listing failed"); alert(e.message); });
     });
 
     document.getElementById("btnClearTok").addEventListener("click", function(){
